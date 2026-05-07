@@ -429,4 +429,4 @@ FodyWeavers.xsd
 *.msp
 
 # Ignore database docker files
-Database/18/docker/
+./Database/data

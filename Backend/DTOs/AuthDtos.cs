@@ -15,7 +15,7 @@ namespace HeimdallBackend.DTOs
 		[MinLength(6)]
 		public string Password { get; set; }
 
-		public int Roles { get; set; }
+		public int RoleID { get; set; }
     }
 
 	public class LoginDto

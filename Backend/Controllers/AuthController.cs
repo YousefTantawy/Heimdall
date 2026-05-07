@@ -58,7 +58,7 @@ namespace HeimdallBackend.Controllers
                 Username = request.Username.Trim(),
                 Email = normalizedEmail,
                 PasswordHash = passwordHash,
-                RoleId = request.Roles
+                RoleId = request.RoleID
             };
 
             _context.Users.Add(newUser);

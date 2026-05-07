@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # The Backend API Service
+  api:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: heimdallBackend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5433:8080"
+    depends_on:
+      - db
+
+  # The Database  
+  db:
+    image: postgres:15
+    container_name: heimdallPostgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 13935823
+      POSTGRES_DB: heimdall
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./Database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+volumes:
+  pgdata:
