@@ -15,25 +15,49 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // --- 2. SETUP JWT TOKENS ---
 builder.Services.AddScoped<TokenService>();
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    var key = Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]);
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+//.AddJwtBearer(options =>
+//{
+//    var key = Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]);
 
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
-        ValidateAudience = false
-    };
-});
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuerSigningKey = true,
+//        IssuerSigningKey = new SymmetricSecurityKey(key),
+//        ValidateIssuer = false,
+//        ValidateAudience = false
+//    };
+//});
 
 builder.Services.AddControllers();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            // 1. Validate the server that created the token
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+
+            // 2. Validate the recipient of the token (your API)
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+
+            // 3. Check that the token hasn't been tampered with
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+
+            // 4. Ensure the token is actually still valid
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero // Removes the default 5-minute grace period
+        };
+    });
 
 // --- 3. SETUP NEW API DOCUMENTATION ---
 builder.Services.AddOpenApi(options =>
