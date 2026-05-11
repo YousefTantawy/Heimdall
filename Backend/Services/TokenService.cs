@@ -24,11 +24,10 @@ namespace HeimdallBackend.Services
                 _ => "User"
             };
 
-            // 1. Safely extract configuration with hardcoded fallbacks if Docker fails
-            var issuer = _config["JwtSettings:Issuer"] ?? "http://localhost:5046";
-            var audience = _config["JwtSettings:Audience"] ?? "http://localhost:5046";
+            var issuer = _config["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT Issuer is missing from configuration.");
+            var audience = _config["Jwt:Audience"] ?? throw new InvalidOperationException("JWT Audience is missing from configuration.");
+            var keyString = _config["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is missing from configuration.");
 
-            // 2. Build the claims list with null-coalescing operators to prevent crashes
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
@@ -39,10 +38,9 @@ namespace HeimdallBackend.Services
                 new Claim(JwtRegisteredClaimNames.Aud, audience)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
-            // 3. The Token (Putting it all together)
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
