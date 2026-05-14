@@ -15,23 +15,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // --- 2. SETUP JWT TOKENS ---
 builder.Services.AddScoped<TokenService>();
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//})
-//.AddJwtBearer(options =>
-//{
-//    var key = Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]);
-
-//    options.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuerSigningKey = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(key),
-//        ValidateIssuer = false,
-//        ValidateAudience = false
-//    };
-//});
 
 builder.Services.AddControllers();
 

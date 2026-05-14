@@ -64,12 +64,11 @@ namespace HeimdallBackend.Controllers
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            var token = _tokenService.CreateToken(newUser);
+            var token = _tokenService.CreateUserToken(newUser);
 
             return Ok(new
             {
                 message = "Registration successful!",
-                userId = newUser.UserId,
                 Token = token
             });
         }
@@ -85,12 +84,11 @@ namespace HeimdallBackend.Controllers
                 return Unauthorized("Invalid email or password.");
             }
 
-            var token = _tokenService.CreateToken(user);
+            var token = _tokenService.CreateUserToken(user);
 
             return Ok(new
             {
                 message = "Login successful!",
-                userId = user.UserId,
                 Token = token
             });
         }
