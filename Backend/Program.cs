@@ -42,6 +42,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddAuthorization();
+
 // --- 3. SETUP NEW API DOCUMENTATION ---
 builder.Services.AddOpenApi(options =>
 {

@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  heimdall-agent:
+    image: youseftantawy/heimdall-agent:latest
+    container_name: heimdall-agent
+    cap_add:
+      - NET_ADMIN
+    network_mode: "host" 
+    environment:
+      - HUB_URL=http://localhost:5433
+      - HEIMDALL_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIyIiwiQWdlbnRJZCI6IjYiLCJyb2xlIjoiQWdlbnQiLCJpc3MiOiJIZWltZGFsbC1IdWIiLCJhdWQiOiJIZWltZGFsbC1BZ2VudHMiLCJuYmYiOjE3Nzg4ODM3MjMsImV4cCI6MTgxMDQxOTcyMywiaWF0IjoxNzc4ODgzNzIzfQ.rWxp71epBKx-bq1skC3lwnKACG6y6eNui_akwgLKcso
+      
+    volumes:
+      # Maps the CSV output directory directly to the host's RAM. 
+      - type: tmpfs
+        target: /app/data/out
+        tmpfs:
+          size: 100m # Caps the RAM usage at 100MB to prevent memory leaks from taking down the host
+          
+    restart: unless-stopped
