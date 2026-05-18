@@ -16,8 +16,6 @@ namespace HeimdallBackend.Controllers
 
         private readonly TokenService _tokenService;
 
-        private readonly string[] _allowedDomains = { "gmail.com", "yahoo.com", "outlook.com", "hotmail.com" };
-
         public AuthController(ApplicationDbContext context, TokenService tokenService)
         {
             _context = context;
@@ -31,7 +29,7 @@ namespace HeimdallBackend.Controllers
         {
             // Validate email domain
             var emailDomain = request.Email.Split('@').LastOrDefault()?.ToLower();
-            if (emailDomain == null || !_allowedDomains.Contains(emailDomain))
+            if (emailDomain == null)
             {
                 return BadRequest("Invalid email provider. Please use a supported provider like Gmail or Yahoo.");
             }
